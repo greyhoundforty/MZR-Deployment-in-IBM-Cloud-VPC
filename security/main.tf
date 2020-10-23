@@ -70,3 +70,23 @@ resource "ibm_is_security_group_rule" "private_dns_2" {
     port_max = 53
   }
 }
+
+resource "ibm_is_security_group_rule" "http_out" {
+  group     = ibm_is_security_group.instance_sg.id
+  direction = "outbound"
+  remote    = "0.0.0.0/0"
+  tcp {
+    port_min = 80
+    port_max = 80
+  }
+}
+
+resource "ibm_is_security_group_rule" "https_out" {
+  group     = ibm_is_security_group.instance_sg.id
+  direction = "outbound"
+  remote    = "0.0.0.0/0"
+  tcp {
+    port_min = 443
+    port_max = 443
+  }
+}

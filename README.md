@@ -1,9 +1,6 @@
-# Consul Cluster in IBM Cloud VPC
+# MZR Deployment in IBM Cloud VPC
 
-This repository has code that will allow you to deploy a bastion host as well as 3 webservers, each in a different zone within a VPC. The repo is an example of using the `count` syntax in
-a module. 
-
-The webservers will be configured using Ansible. All Ansible commands will go through the Bastion instance.
+This repository has code that will allow you to deploy a bastion host as well as 3 webservers, each in a different zone within a VPC. The webservers will be configured using Ansible. All Ansible commands will go through the Bastion instance.
 
 ## Deploying resources
 
@@ -23,3 +20,11 @@ You will need to fill in the following details
 
 
 ![Diagram](output/rt-v1-vpc.gv.png)
+
+## Current State
+ - [x] Deploy VPC and Networking across 3 zones in a region 
+ - [x] Create instance security group for webservers
+ - [ ] Move SSH in rule to new bastion security group and remove from instance sg
+ - [ ] Create bastion host in zone 1 of region 
+ - [ ] Adjust instance sg to only allow SSH in from bastion IP
+ - [ ] Create Ansible templates
