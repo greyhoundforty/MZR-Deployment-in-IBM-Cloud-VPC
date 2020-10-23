@@ -22,4 +22,4 @@ You will need to fill in the following details
  - ssh_key = The SSH key name that will be added to your compute instances.
 
 
-![Diagram}(output/rt-v1-vpc.gv.png)
+![Diagram](output/rt-v1-vpc.gv.png)
