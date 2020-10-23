@@ -1,7 +1,7 @@
 resource "ibm_is_security_group" "instance_sg" {
-    name = "instance-sg"
-    vpc = var.vpc
-     resource_group = var.resource_group_id
+  name           = "instance-sg"
+  vpc            = var.vpc
+  resource_group = var.resource_group_id
 }
 
 resource "ibm_is_security_group_rule" "ping" {

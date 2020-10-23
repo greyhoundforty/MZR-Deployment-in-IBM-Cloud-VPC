@@ -20,14 +20,12 @@ module "networking" {
 }
 
 module "security" {
-  source                 = "./security"
-  remote_ip              = var.remote_ip
-  subnets                = module.networking.cidr
-  resource_group_id      = data.ibm_resource_group.group.id
+  source            = "./security"
+  remote_ip         = var.remote_ip
+  subnets           = module.networking.cidr
+  resource_group_id = data.ibm_resource_group.group.id
   vpc               = module.vpc.vpc_id
 }
-
-
 
 module "instance" {
   source            = "./instance"
