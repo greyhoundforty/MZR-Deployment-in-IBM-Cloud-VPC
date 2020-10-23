@@ -1,33 +1,42 @@
+locals {
+  zones = [data.ibm_is_zones.regional_zones.zones[0], data.ibm_is_zones.regional_zones.zones[1], data.ibm_is_zones.regional_zones.zones[2]]
+}
+
 module "vpc" {
   source            = "./vpc"
   name              = "${var.basename}-vpc"
   resource_group_id = data.ibm_resource_group.group.id
   tags              = var.tags
+  zone              = local.zones
 }
 
 module "networking" {
   source            = "./network"
-  count             = length(data.ibm_is_zones.regional_zones.zones)
-  zone              = data.ibm_is_zones.regional_zones.zones[count.index]
+  zone              = local.zones
   vpc               = module.vpc.vpc_id
   resource_group_id = data.ibm_resource_group.group.id
   name              = var.basename
-  cidr_blocks       = ["172.16.0.0/24", "172.16.64.0/24", "172.16.128.0/24"]
   network_acl       = module.vpc.vpc_default_acl
 }
 
 module "security" {
-  source = "./security"
-  resource_group_id = data.ibm_resource_group.group.id
-  
+  source                 = "./security"
+  remote_ip              = var.remote_ip
+  subnets                = module.networking.cidr
+  resource_group_id      = data.ibm_resource_group.group.id
+  vpc               = module.vpc.vpc_id
 }
+
+
 
 module "instance" {
   source            = "./instance"
-  count             = length(data.ibm_is_zones.regional_zones.zones)
-  zone              = data.ibm_is_zones.regional_zones.zones[count.index]
+  zone              = local.zones
   vpc               = module.vpc.vpc_id
   resource_group_id = data.ibm_resource_group.group.id
   name              = var.basename
-  subnet_id         = module.networking.subnet_id[count.index]
+  subnet_id         = module.networking.subnet_id
+  security_group    = module.security.instance_security_group_id
+  ssh_key_ids       = [data.ibm_is_ssh_key.key.id]
+  tags              = concat(var.tags, ["instance"])
 }

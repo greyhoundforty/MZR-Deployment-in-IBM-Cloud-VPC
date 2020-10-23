@@ -9,9 +9,20 @@ variable "resource_group" {
 }
 
 variable "basename" {
-  default = "test-rt"
+  default = ""
 }
 
 variable "tags" {
   default = ["terraform", "ryantiffany"]
+}
+
+variable "remote_ip" {
+  description = "Remote IP that will be allowed to access Bastion host."
+  type        = string
+  default     = ""
+
+}
+
+variable "ssh_key" {
+  default = ""
 }

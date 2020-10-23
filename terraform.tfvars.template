@@ -1,0 +1,8 @@
+# A prefix for all resource names
+basename=""
+# IBM VPC region where resources will be deployed
+region=""
+# Resource Group for deployed resources
+resource_group=""
+# SSH key to add to compute instances
+ssh_key=""

@@ -5,3 +5,7 @@ output "vpc_id" {
 output "vpc_default_acl" {
   value = ibm_is_network_acl.network_acl.id
 }
+
+output "default_security_group" {
+  value = ibm_is_vpc.vpc.default_security_group
+}

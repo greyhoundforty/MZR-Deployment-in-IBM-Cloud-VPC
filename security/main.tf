@@ -1,5 +1,11 @@
+resource "ibm_is_security_group" "instance_sg" {
+    name = "instance-sg"
+    vpc = var.vpc
+     resource_group = var.resource_group_id
+}
+
 resource "ibm_is_security_group_rule" "ping" {
-  group     = var.default_security_group
+  group     = ibm_is_security_group.instance_sg.id
   direction = "inbound"
   remote    = "0.0.0.0/0"
   icmp {
@@ -7,9 +13,26 @@ resource "ibm_is_security_group_rule" "ping" {
   }
 }
 
+resource "ibm_is_security_group_rule" "ssh_in" {
+  group     = ibm_is_security_group.instance_sg.id
+  direction = "inbound"
+  remote    = var.remote_ip
+  tcp {
+    port_max = 22
+    port_min = 22
+  }
+}
+
+resource "ibm_is_security_group_rule" "vpc_allow_in" {
+  count     = length(var.subnets)
+  group     = ibm_is_security_group.instance_sg.id
+  direction = "inbound"
+  remote    = var.subnets[count.index]
+}
+
 # from https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc
 resource "ibm_is_security_group_rule" "cse_dns_1" {
-  group     = var.default_security_group
+  group     = ibm_is_security_group.instance_sg.id
   direction = "outbound"
   remote    = "161.26.0.10"
   udp {
@@ -19,7 +42,7 @@ resource "ibm_is_security_group_rule" "cse_dns_1" {
 }
 
 resource "ibm_is_security_group_rule" "cse_dns_2" {
-  group     = var.default_security_group
+  group     = ibm_is_security_group.instance_sg.id
   direction = "outbound"
   remote    = "161.26.0.11"
   udp {
@@ -29,7 +52,7 @@ resource "ibm_is_security_group_rule" "cse_dns_2" {
 }
 
 resource "ibm_is_security_group_rule" "private_dns_1" {
-  group     = var.default_security_group
+  group     = ibm_is_security_group.instance_sg.id
   direction = "outbound"
   remote    = "161.26.0.7"
   udp {
@@ -39,7 +62,7 @@ resource "ibm_is_security_group_rule" "private_dns_1" {
 }
 
 resource "ibm_is_security_group_rule" "private_dns_2" {
-  group     = var.default_security_group
+  group     = ibm_is_security_group.instance_sg.id
   direction = "outbound"
   remote    = "161.26.0.8"
   udp {
